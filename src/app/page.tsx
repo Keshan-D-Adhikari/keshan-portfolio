@@ -1,103 +1,267 @@
 import Image from "next/image";
+import {
+  certifications,
+  education,
+  featuredProject,
+  leadership,
+  profile,
+  projects,
+  skillGroups,
+  stats,
+  type Project,
+} from "@/data/portfolio";
+import { ArrowUpRightIcon, GitHubIcon, LinkedInIcon, MailIcon } from "@/components/icons";
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+    <>
+      <Header
+        ctaHref={profile.resume || profile.linkedin}
+        ctaLabel={profile.resume ? "Download CV" : "LinkedIn"}
+      />
+      <main className="mx-auto max-w-6xl px-4 sm:px-6">
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Experience />
+        <Contact />
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      <footer className="border-t border-border py-8 text-center text-sm text-muted">
+        © {new Date().getFullYear()} {profile.name}. Built with Next.js and Tailwind CSS.
       </footer>
-    </div>
+    </>
+  );
+}
+
+function About() {
+  return (
+    <Section id="about" eyebrow="01" title="About me">
+      <div className="grid gap-10 md:grid-cols-[1fr_auto]">
+        <div className="space-y-4 text-lg leading-relaxed text-muted">
+          {profile.about.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </div>
+        <dl className="grid grid-cols-3 gap-4 md:grid-cols-1 md:content-start">
+          {stats.map((stat) => (
+            <div key={stat.label} className="rounded-xl border border-border bg-surface p-4 md:w-44">
+              <dt className="text-xs text-muted">{stat.label}</dt>
+              <dd className="mt-1 text-2xl font-bold text-accent">{stat.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </Section>
+  );
+}
+
+function Skills() {
+  return (
+    <Section id="skills" eyebrow="02" title="Skills & tools">
+      <div className="grid gap-4 sm:grid-cols-2">
+        {skillGroups.map((group) => (
+          <div key={group.title} className="rounded-xl border border-border bg-surface p-5">
+            <h3 className="font-semibold">{group.title}</h3>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {group.items.map((item) => (
+                <li key={item}><Tag>{item}</Tag></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function Projects() {
+  return (
+    <Section id="projects" eyebrow="03" title="Projects">
+      <FeaturedProject project={featuredProject} />
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        {projects.map((project) => (
+          <ProjectCard key={project.title} project={project} />
+        ))}
+      </div>
+      <a
+        href={profile.github}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-8 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline"
+      >
+        See everything on GitHub <ArrowUpRightIcon />
+      </a>
+    </Section>
+  );
+}
+
+function FeaturedProject({ project }: { project: Project }) {
+  return (
+    <article className="overflow-hidden rounded-2xl border border-border bg-surface">
+      <div className="grid gap-px bg-border sm:grid-cols-2">
+        {project.images?.map((image) => (
+          <div key={image.src} className="relative aspect-[4/3] bg-background">
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              sizes="(min-width: 640px) 50vw, 100vw"
+              className="object-cover object-top"
+            />
+          </div>
+        ))}
+      </div>
+      <div className="p-6 sm:p-8">
+        <p className="font-mono text-xs uppercase tracking-wider text-accent">Featured · Final year project</p>
+        <h3 className="mt-2 text-2xl font-bold">{project.title}</h3>
+        <p className="mt-3 leading-relaxed text-muted">{project.summary}</p>
+        {project.highlights && (
+          <ul className="mt-4 space-y-2 text-sm text-muted">
+            {project.highlights.map((item) => (
+              <li key={item} className="flex gap-2">
+                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        )}
+        <ProjectFooter project={project} />
+      </div>
+    </article>
+  );
+}
+
+function ProjectCard({ project }: { project: Project }) {
+  return (
+    <article className="flex flex-col rounded-xl border border-border bg-surface p-5 transition-colors hover:border-accent/60">
+      <h3 className="text-lg font-semibold">{project.title}</h3>
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{project.summary}</p>
+      <ProjectFooter project={project} />
+    </article>
+  );
+}
+
+function ProjectFooter({ project }: { project: Project }) {
+  return (
+    <>
+      <ul className="mt-4 flex flex-wrap gap-2">
+        {project.tags.map((tag) => (
+          <li key={tag}><Tag>{tag}</Tag></li>
+        ))}
+      </ul>
+      <div className="mt-5 flex gap-4 text-sm font-semibold">
+        <a href={project.repo} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 hover:text-accent">
+          <GitHubIcon className="size-4" /> Code
+        </a>
+        {project.demo && (
+          <a href={project.demo} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-accent hover:underline">
+            Live demo <ArrowUpRightIcon />
+          </a>
+        )}
+      </div>
+    </>
+  );
+}
+
+function Experience() {
+  return (
+    <Section id="experience" eyebrow="04" title="Education & leadership">
+      <div className="grid gap-10 md:grid-cols-2">
+        <div>
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted">Education</h3>
+          <Timeline items={education} />
+          <h3 className="mt-10 text-sm font-semibold uppercase tracking-wider text-muted">Leadership</h3>
+          <Timeline items={leadership} />
+        </div>
+        <div>
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted">Certifications</h3>
+          <ul className="mt-4 space-y-3">
+            {certifications.map((cert) => (
+              <li key={cert.name} className="rounded-xl border border-border bg-surface p-4">
+                <p className="font-medium">{cert.name}</p>
+                <p className="mt-1 text-sm text-muted">{cert.issuer}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function Timeline({ items }: { items: { title: string; place: string; period: string; detail?: string }[] }) {
+  return (
+    <ol className="mt-4 space-y-6 border-l border-border pl-6">
+      {items.map((item) => (
+        <li key={item.title + item.period} className="relative">
+          <span className="absolute top-1.5 -left-[29px] size-2.5 rounded-full border-2 border-accent bg-background" aria-hidden="true" />
+          <p className="font-mono text-xs text-accent">{item.period}</p>
+          <p className="mt-1 font-semibold">{item.title}</p>
+          <p className="text-sm text-muted">{item.place}</p>
+          {item.detail && <p className="mt-2 text-sm leading-relaxed text-muted">{item.detail}</p>}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function Contact() {
+  return (
+    <Section id="contact" eyebrow="05" title="Get in touch">
+      <div className="rounded-2xl border border-border bg-surface p-8 text-center sm:p-12">
+        <p className="mx-auto max-w-xl text-lg leading-relaxed text-muted">
+          I&apos;m looking for internship and graduate opportunities in software engineering and AI/ML.
+          If you have a role, a project or just a question, my inbox is open.
+        </p>
+        <a
+          href={`mailto:${profile.email}`}
+          className="mt-8 inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 font-semibold text-background transition-opacity hover:opacity-90"
+        >
+          <MailIcon /> {profile.email}
+        </a>
+        <div className="mt-6 flex justify-center gap-4 text-muted">
+          <SocialLink href={profile.github} label="GitHub"><GitHubIcon /></SocialLink>
+          <SocialLink href={profile.linkedin} label="LinkedIn"><LinkedInIcon /></SocialLink>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function Section({ id, eyebrow, title, children }: { id: string; eyebrow: string; title: string; children: React.ReactNode }) {
+  return (
+    <section id={id} className="py-16 sm:py-20">
+      <h2 className="flex items-center gap-3 text-2xl font-bold sm:text-3xl">
+        <span className="font-mono text-base text-accent">{eyebrow}.</span>
+        {title}
+        <span className="ml-2 hidden h-px flex-1 bg-border sm:block" aria-hidden="true" />
+      </h2>
+      <div className="mt-8">{children}</div>
+    </section>
+  );
+}
+
+function Tag({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-block rounded-md bg-accent-soft px-2.5 py-1 font-mono text-xs text-accent">
+      {children}
+    </span>
+  );
+}
+
+function SocialLink({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
+  const external = href.startsWith("http");
+  return (
+    <a
+      href={href}
+      aria-label={label}
+      {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+      className="rounded-md p-1 transition-colors hover:text-accent"
+    >
+      {children}
+    </a>
   );
 }
